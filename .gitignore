@@ -1,0 +1,54 @@
+# Node.js dependencies
+/node_modules/
+
+# TypeScript build output
+/dist/
+/build/
+
+# npm package lock file
+/package-lock.json
+
+# Yarn lock file
+/yarn.lock
+
+# TypeScript cache
+*.tsbuildinfo
+
+# IDE/editor directories and files
+/.idea/
+/.vscode/
+/*.suo
+/*.user
+/*.userosfile
+/*.swp
+/*.swo
+
+# Environment files
+# /.env
+# /.env.local
+# /.env.*.local
+
+# MacOS system files
+.DS_Store
+
+# Log files
+*.log
+
+# Jest test results
+/coverage/
+
+# Optional Nginx or Apache configs
+/nginx/
+/apache/
+
+# Optional build files for Docker
+/docker/
+
+# pm2 logs
+/.pm2/
+
+# Tye-specific files
+.tye/
+
+# Any custom temporary files or folders
+/tmp/
