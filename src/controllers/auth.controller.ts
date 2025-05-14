@@ -5,7 +5,7 @@ import { generateToken } from '../utils/auth.utils'
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
     if (!name || !email || !password) {
       res.status(400).json({ message: 'All fields required' })
       return
@@ -19,7 +19,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     const passwordHash = await bcrypt.hash(password, 10)
 
-    const user = await User.create({ name, email, passwordHash })
+    const user = await User.create({ name, email, role, passwordHash })
     const token = generateToken({
       userId: user._id.toString(),
       email: user.email,
@@ -81,4 +81,23 @@ export const getCurrentUser = async (
       .status(500)
       .json({ message: 'Error fetching user', error: (error as Error).message })
   }
+}
+
+export const getProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  if (!req.user) {
+    res.status(401).json({ success: false, message: 'Unauthorized' })
+    return
+  }
+
+  const userObj = req.user.toObject?.() ?? req.user
+  const { passwordHash, ...safeUser } = userObj
+
+  res.status(200).json({
+    success: true,
+    data: safeUser,
+    message: `Welcome back, ${safeUser.name}`,
+  })
 }

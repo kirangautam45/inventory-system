@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { register, login, getCurrentUser } from '../controllers/auth.controller'
+import {
+  register,
+  login,
+  getCurrentUser,
+  getProfile,
+} from '../controllers/auth.controller'
 import { authenticate, authorize } from '../middleware/auth.middleware'
 
 const router = Router()
@@ -7,9 +12,10 @@ const router = Router()
 router.post('/register', register)
 router.post('/login', login)
 router.get('/me', authenticate, getCurrentUser)
+router.get('/profile', authenticate, getProfile)
 
 // Only admin can access this
-router.get('/admin-data', authenticate, authorize(['admin']), (req, res) => {
+router.get('/admin-data', authenticate, authorize(['admin']), (_req, res) => {
   res.json({ message: 'Admin-only content' })
 })
 
@@ -17,15 +23,14 @@ router.get('/admin-data', authenticate, authorize(['admin']), (req, res) => {
 router.get(
   '/manager-data',
   authenticate,
-  authorize(['admin', 'manager']),
-  (req, res) => {
+  authorize(['manager']),
+  (_req, res) => {
     res.json({ message: 'Manager/Admin content' })
   }
 )
 
-// Any authenticated user can access this
-router.get('/profile', authenticate, (req, res) => {
-  res.json({ message: `Hello, ${req.user?.name}` })
+router.get('/staff-data', authenticate, authorize(['staff']), (_req, res) => {
+  res.json({ message: 'staff/Manager/Admin content' })
 })
 
 export default router

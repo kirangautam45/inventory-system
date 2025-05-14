@@ -1,14 +1,8 @@
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { IUser } from '../types/user'
+import { CustomJwtPayload, IUser } from '../types/inventory'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret'
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h'
-
-interface CustomJwtPayload {
-  userId: string
-  email: string
-  role: string
-}
 
 export const generateToken = (payload: CustomJwtPayload): string => {
   return jwt.sign(payload, JWT_SECRET, {

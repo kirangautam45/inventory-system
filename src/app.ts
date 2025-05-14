@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 
 // 🧭 Routes
-app.use('/api/auth', authRoutes)
+app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/user', userRoutes)
 
 // 🏠 Root route

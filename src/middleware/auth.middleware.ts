@@ -1,17 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { getUserPermissions, verifyToken } from '../utils/auth.utils'
 import User from '../models/user.model'
-import { IUser } from '../types/user'
+import { IUser } from '../types/inventory'
 import { Document } from 'mongoose'
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: IUser & Document
-      userId?: string
-    }
-  }
-}
+
 
 export const authenticate = async (
   req: Request,
