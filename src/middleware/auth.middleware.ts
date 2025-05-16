@@ -1,10 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { getUserPermissions, verifyToken } from '../utils/auth.utils'
 import User from '../models/user.model'
-import { IUser } from '../types/inventory'
-import { Document } from 'mongoose'
-
-
 
 export const authenticate = async (
   req: Request,
@@ -41,35 +37,20 @@ export const authenticate = async (
 /**
  * Generic RBAC Middleware with async role/permission check and optional logging
  * @param requiredRoles - array of allowed roles
- * @param options.log - enable request logging
  */
-export const authorize = (
-  requiredRoles: string[] = [],
-  options: { log?: boolean } = { log: true }
-) => {
+export const authorize = (requiredRoles: string[] = []) => {
   return async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const log = options?.log
     try {
-      if (log) {
-        console.log(`[RBAC] Checking permissions for user: ${req.user?.email}`)
-      }
-
       if (!req.user) {
         res.status(401).json({ message: 'Unauthorized: User not found' })
         return
       }
 
       const userPermissions = await getUserPermissions(req.user)
-
-      if (log) {
-        console.log(`[RBAC] User role: ${req.user.role}`)
-        console.log(`[RBAC] Required: ${requiredRoles.join(', ')}`)
-        console.log(`[RBAC] User permissions: ${userPermissions.join(', ')}`)
-      }
 
       const hasAccess = requiredRoles.some((role) =>
         userPermissions.includes(role)
@@ -82,8 +63,11 @@ export const authorize = (
 
       next()
     } catch (error) {
-      console.error('[RBAC] Error in authorization middleware:', error)
-      res.status(500).json({ message: 'Internal server error' })
+      console.error(' Error in authorization middleware:', error)
+      res.status(401).json({
+        message: 'Error in authorization middleware:',
+        error: (error as Error).message,
+      })
     }
   }
 }

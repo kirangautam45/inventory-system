@@ -15,7 +15,6 @@ export const verifyToken = (token: string): CustomJwtPayload => {
 }
 
 export const getUserPermissions = async (user: IUser): Promise<string[]> => {
-  // In a real app, fetch permissions from DB or external service
   const roleMap: Record<string, string[]> = {
     admin: ['admin', 'manager', 'staff'],
     manager: ['manager', 'staff'],
